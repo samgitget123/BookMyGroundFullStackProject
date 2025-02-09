@@ -33,8 +33,8 @@ const App = () => {
             <Routes>
             <Route path="/login" element={<LoginForm />} />
             <Route path="/register" element={<RegisterForm />} />
-            <Route path="/" element={<WelcomeHome />} />
-              {/* <Route path="/" element={<Home />} /> */}
+            {/* <Route path="/" element={<WelcomeHome />} /> */}
+              <Route path="/" element={<Home />} />
               <Route path="/createground" element={<CreateGroundForm />} exact />
               <Route path="/viewground/:gid" element={<ViewGround />} />
               <Route path="/payment/:gid" element={<Payment />} />

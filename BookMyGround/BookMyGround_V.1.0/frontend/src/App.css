@@ -240,7 +240,7 @@ footer {
 }
 
 .spanfont {
-  font-size: 22px !important;
+  font-size: 25px !important;
   color: var(--special-color) !important;
   line-height: 22px !important;
   font-weight: 22px !important;
@@ -499,7 +499,7 @@ span .secondaryFont {
    
   }
   .spanfont {
-    font-size: 22px!important;
+    font-size: 25px!important;
    
   }
   .cart-button {
@@ -583,7 +583,7 @@ span .secondaryFont {
    
   }
   .spanfont {
-    font-size: 22px!important;
+    font-size: 25px!important;
    
   }
   .Carticon {

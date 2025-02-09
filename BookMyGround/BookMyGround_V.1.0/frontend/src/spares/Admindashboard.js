@@ -11,7 +11,7 @@ import Modal from 'react-bootstrap/Modal'; // Import the Bootstrap Modal
 const AdminDashboard = () => {
   const [bookings, setBookings] = useState([]);
   const [search, setSearch] = useState("");
-  const [filteredBookings, setFilteredBookings] = useState(bookings);
+  const [filteredBookings, setFilteredBookings] = useState([]);
   const { baseUrl } = useBaseUrl();
   const [currentPage, setCurrentPage] = useState(1);
   const [bookingsPerPage] = useState(10);
@@ -94,7 +94,6 @@ const AdminDashboard = () => {
   const indexOfLastBooking = currentPage * bookingsPerPage;
   const indexOfFirstBooking = indexOfLastBooking - bookingsPerPage;
   const currentBookings = filteredBookings.slice(indexOfFirstBooking, indexOfLastBooking);
-  console.log(currentBookings, 'currentbooking')
   const totalPages = Math.ceil(filteredBookings.length / bookingsPerPage);
 
   const paginate = (pageNumber) => {
@@ -110,8 +109,6 @@ const AdminDashboard = () => {
       "Name": booking.name,
       "Date": booking.date,
       "Mobile": booking.mobile,
-      "Advance": booking.prepaid,
-      "Amount": booking.book.price,
       "Status": booking.paymentStatus
     })));
 
@@ -138,16 +135,11 @@ const AdminDashboard = () => {
   };
 
   // Reset the date filter to show all bookings
-  // const resetDateFilter = () => {
-  //   setSelectedDate(null); // Reset selected date to null
-  //   setFilteredBookings(bookings); // Show all bookings again
-  // };
   const resetDateFilter = () => {
-    const currentDate = new Date(); // Get the current date
-    setSelectedDate(currentDate); // Set selected date to today's date
+    setSelectedDate(null); // Reset selected date to null
     setFilteredBookings(bookings); // Show all bookings again
   };
-  
+
   // Open modal with booking details
   const handleViewBooking = (booking) => {
     setSelectedBooking(booking);
@@ -159,42 +151,22 @@ const AdminDashboard = () => {
     setShowModal(false);
   };
 
+  // Function to calculate the number of slots and total price for today's bookings
   const getTodaySummary = () => {
-    // Check if selectedDate is not null before proceeding
-    if (!selectedDate) {
-      return { totalSlots: 0, totalAmount: 0 }; // Return default values if selectedDate is null
-    }
+    const today = new Date().toISOString().split("T")[0]; // Get today's date in YYYY-MM-DD format
   
-    const selectedDateStr = selectedDate.toISOString().split("T")[0]; // Get selected date in YYYY-MM-DD format
-  
-    // Filter bookings for the selected date
-    const selectedDateBookings = bookings.filter(booking => booking.date.split("T")[0] === selectedDateStr);
+    // Filter today's bookings
+    const todayBookings = bookings.filter(booking => booking.date.split("T")[0] === today);
   
     // Calculate the total slots and total amount based on the slots in each booking
-    const totalSlots = selectedDateBookings.reduce((total, booking) => total + booking.slots.length, 0);
-    const totalAmount = selectedDateBookings.reduce((total, booking) => total + (booking.book ? booking.book.price : 0), 0);
-  
+    const totalSlots = todayBookings.reduce((total, booking) => total + booking.slots.length, 0); // Count the slots in each booking
+    const totalAmount = todayBookings.reduce((total, booking) => total + (booking.book ? booking.book.price : 0), 0); // Sum the amount for each booking
+    console.log(totalSlots, 'todaybookings')
     return { totalSlots, totalAmount };
   };
   
-  // Safely destructure the result
+
   const { totalSlots, totalAmount } = getTodaySummary();
-  
-
-  // const getTodaySummary = () => {
-  //   const selectedDateStr = selectedDate.toISOString().split("T")[0]; // Get selected date in YYYY-MM-DD format
-
-  //   // Filter bookings for the selected date
-  //   const selectedDateBookings = bookings.filter(booking => booking.date.split("T")[0] === selectedDateStr);
-
-  //   // Calculate the total slots and total amount based on the slots in each booking
-  //   const totalSlots = selectedDateBookings.reduce((total, booking) => total + booking.slots.length, 0);
-  //   const totalAmount = selectedDateBookings.reduce((total, booking) => total + (booking.book ? booking.book.price : 0), 0);
-
-  //   return { totalSlots, totalAmount };
-  // };
-
-  // const { totalSlots, totalAmount } = getTodaySummary();
 
   return (
     <div className="container mt-4">
@@ -268,8 +240,6 @@ const AdminDashboard = () => {
                   <th>Name</th>
                   <th>Date</th>
                   <th>Mobile</th>
-                  <th>Advance</th>
-                  <th>Amount</th>
                   <th>Status</th>
                   <th>Actions</th>
                 </tr>
@@ -282,8 +252,6 @@ const AdminDashboard = () => {
                     <td>{booking.name}</td>
                     <td>{booking.date}</td>
                     <td>{booking.mobile}</td>
-                    <td>{booking.prepaid}</td>
-                    <td>{booking.book.price}</td>
                     <td>{booking.paymentStatus}</td>
                     <td>
                       <button className="btn btn-success btn-sm" onClick={() => handleViewBooking(booking)}>View</button>

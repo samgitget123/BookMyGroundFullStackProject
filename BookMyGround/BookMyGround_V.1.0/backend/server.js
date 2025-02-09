@@ -76,6 +76,7 @@ const saveBookingDataToExcel = async () => {
       { header: "Name", key: "user", width: 20 },
       { header: "Date", key: "date", width: 15 },
       { header: "Time Slot", key: "timeSlot", width: 15 },
+      { header: "Advance", key: "advance", width: 15 },
       { header: "Amount", key: "amount", width: 15 },
     ];
 
@@ -87,6 +88,7 @@ const saveBookingDataToExcel = async () => {
         user: booking.name,
         date: booking.date,
         timeSlot: booking.slots,
+        advance: booking.prepaid,
         amount: booking?.book?.price,
       });
     });
